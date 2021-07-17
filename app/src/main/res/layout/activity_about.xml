@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".About"
+    android:background="@drawable/center_tricolor">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="20sp"
+        android:typeface="sans"
+        android:text="About" />
+
+    <ImageView
+        android:id="@+id/title"
+        android:layout_below="@id/textView"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bose_light_gadget" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_below="@id/title"
+        android:layout_marginTop="85dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Author: Javier Pedrosa Alias"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_below="@id/author"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="App official name: BLG (Bose Light Gadget)"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/android_version"
+        android:layout_below="@id/app_name"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Android gradle plugin version: 3.6.3"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/gradle_version"
+        android:layout_below="@id/android_version"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Gradle version: 5.6.4"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/dev_program"
+        android:layout_below="@id/gradle_version"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Developing program: Android Studio"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/sdk"
+        android:layout_below="@id/dev_program"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="SDK API version: 29"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/featuring"
+        android:layout_below="@id/sdk"
+        android:layout_marginTop="20dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Feat. Arduino and Lottie Animations"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="15sp"
+        android:typeface="sans" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/kandinsnky"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        app:lottie_rawRes="@raw/kandinsky"
+        android:visibility="visible"
+        android:alpha="0.3"
+
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/logo_1"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bose_white_logo" />
+
+        <ImageView
+            android:id="@+id/logo_2"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bose_white_logo" />
+
+        <ImageView
+            android:id="@+id/logo_3"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bose_white_logo" />
+
+        <ImageView
+            android:id="@+id/logo_4"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bose_white_logo" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textColor="@color/greyark"
+        android:textSize="12sp"
+        android:typeface="sans"
+        android:text="© Creative Developments Hip Hop Nation 420™" />
+
+</RelativeLayout>

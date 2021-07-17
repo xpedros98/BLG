@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Lateral"
+    android:background="@android:color/holo_red_light">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="67dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        app:srcCompat="@drawable/foco" />
+
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/nLeds"
+        android:layout_width="353dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="111dp"
+        app:bsb_auto_adjust_section_mark="true"
+        app:bsb_bubble_color="@color/yellow_led"
+        app:bsb_second_track_color="@color/yellow_led"
+        app:bsb_section_text_size="10sp"
+        app:bsb_show_section_mark="true"
+        app:bsb_show_section_text="true"
+        app:bsb_show_thumb_text="true"
+        app:bsb_thumb_text_color="@color/yellow_led"
+        app:bsb_thumb_text_size="18sp"
+        app:bsb_touch_to_seek="true"
+        app:bsb_track_color="@color/greyark" />
+
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/bright"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        app:bsb_always_show_bubble="false"
+        app:bsb_auto_adjust_section_mark="true"
+        app:bsb_bubble_color="@android:color/transparent"
+        app:bsb_bubble_text_color="@android:color/transparent"
+        app:bsb_second_track_color="@android:color/white"
+        app:bsb_second_track_size="10dp"
+        app:bsb_section_count="100"
+        app:bsb_section_text_color="@android:color/transparent"
+        app:bsb_show_progress_in_float="false"
+        app:bsb_show_section_mark="false"
+        app:bsb_show_section_text="false"
+        app:bsb_show_thumb_text="false"
+        app:bsb_thumb_text_color="@android:color/white"
+        app:bsb_thumb_text_size="14dp"
+        app:bsb_touch_to_seek="true"
+        app:bsb_track_color="@color/greyark"
+        app:bsb_track_size="7dp" />
+
+    <Button
+        android:id="@+id/bt_lateral"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="420dp"
+        android:background="@android:color/holo_blue_light"
+        android:shadowRadius="@android:integer/config_longAnimTime"
+        android:text="Send data"
+        android:textColor="@android:color/black"
+        android:textSize="15sp" />
+
+    <com.lukedeighton.wheelview.WheelView
+        android:id="@+id/wheelview"
+        android:layout_width="match_parent"
+        android:layout_height="166dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        app:emptyItemColor="@color/yellow_led"
+        app:repeatItems="false"
+        app:rotatableWheelDrawable="true"
+        app:selectionAngle="45.0"
+        app:wheelDrawable="@drawable/vinyl"
+        app:wheelItemCount="6"
+        app:wheelItemRadius="20dp"
+        app:wheelPadding="0dp"
+        app:wheelPosition="bottom"
+        app:wheelRadius="150dp" />
+
+    // Layout for the speed management.
+    <RelativeLayout
+        android:layout_width="270dp"
+        android:layout_height="233dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="170dp">
+
+        <com.cardiomood.android.controls.gauge.SpeedometerGauge
+            android:id="@+id/speedometer"
+            android:layout_width="wrap_content"
+            android:layout_height="280dp"
+            android:padding="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+        <com.triggertrap.seekarc.SeekArc
+            android:id="@+id/seekArc"
+            android:layout_width="313dp"
+            android:layout_height="211dp"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            app:arcColor="@android:color/transparent"
+            app:arcWidth="10dp"
+            app:progressColor="@android:color/transparent"
+            app:rotation="270"
+            app:startAngle="0"
+            app:sweepAngle="180"
+            app:thumb="@android:color/transparent"
+            app:touchInside="true" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="69dp"
+            android:layout_alignParentBottom="true"
+            android:text="Speed:"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/speedValue"
+            android:layout_width="106dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_alignParentBottom="true"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:typeface="sans" />
+    </RelativeLayout>
+
+</RelativeLayout>
