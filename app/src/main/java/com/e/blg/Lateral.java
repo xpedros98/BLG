@@ -62,9 +62,6 @@ public class Lateral extends AppCompatActivity {
         lateralData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Send bluetooth message
-                common.write("14;3");
-
                 // Use bounce interpolator with amplitude 0.2 and frequency 20.
                 common.MyBounceInterpolator interpolator = new common.MyBounceInterpolator(0.2, 20);
                 springAnimation.setInterpolator(interpolator);
@@ -89,7 +86,6 @@ public class Lateral extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 currLedsNum = ledsNum.getProgress();
                 if (currLedsNum != lastLedsNum) {
-                    common.write("13;" + currLedsNum + ";");
                     lastLedsNum = currLedsNum;
                 }
                 return false;
@@ -111,7 +107,6 @@ public class Lateral extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 currBright = bright.getProgress();
                 if (currBright != lastBright) {
-                    common.write("11;" + currBright + ";");
                     lastBright = currBright;
                 }
                 return false;
@@ -139,7 +134,6 @@ public class Lateral extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 currSpeed = circularProgressBar.getProgress();
                 if (currSpeed != lastSpeed) {
-                    common.write("11;" + currSpeed*5 + ";");
                     lastSpeed = currSpeed;
                     speedValue.setText(String.valueOf(currSpeed*5));
                     speedometer.setSpeed(currSpeed*5);

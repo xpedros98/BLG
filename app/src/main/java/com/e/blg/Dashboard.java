@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
@@ -54,17 +55,11 @@ public class Dashboard extends AppCompatActivity {
     AnimationDrawable animationDrawable;
 
     // Bluetooth related.
+    public MyBTclass bt = new MyBTclass();
     BluetoothAdapter bluetoothAdapter;
-    private static final String MODULE_ADRESS = "94:B9:7E:E4:AB:8A";
-    static final UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothSocket bluetoothSocket = null;
-    BluetoothServerSocket bluetoothServerSocket = null;
     Set<BluetoothDevice>  pairedDevices;
-    InputStream inputStream = null;
-    OutputStream outputStream = null;
 
-    int counter; // Counter to check the attempts until being available to connect the socket.
-    int counter_10;  // Auxiliary counter to check the attempts until being available to connect the socket.
     int refresh_counter; // Counter for the refresh function to know the first iteration to show special feedback.
 
     // Time control variables
@@ -121,16 +116,13 @@ public class Dashboard extends AppCompatActivity {
 
         // Data exchange between activities need.
         Bundle extras = getIntent().getExtras();
-
         if (extras != null) {
-
             // Get the string with the specified key.
             String extraString = extras.getString("main_act");
             if (extraString.equals("check_BT")) {
-
                 // Check if bluetooth is available.
                 if (bluetoothAdapter == null) {
-                    Toast.makeText(getBaseContext(), "PROBLEMS: This device do not support Bluetooth.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "PROBLEMS: this device do not support Bluetooth.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (bluetoothAdapter.isEnabled()) { // Is turned ON.
                         Toast.makeText(getBaseContext(), "Bluetooth is already turned ON.", Toast.LENGTH_SHORT).show();
@@ -152,10 +144,9 @@ public class Dashboard extends AppCompatActivity {
         circleMenuView.setEventListener(new CircleMenuView.EventListener() {
             @Override
             public void onButtonClickAnimationEnd(@NonNull CircleMenuView view, int buttonIndex) {
-
                 // Check if bluetooth is available.
                 if (bluetoothAdapter == null) {
-                    Toast.makeText(getBaseContext(), "PROBLEMS: This device do not support Bluetooth.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "PROBLEMS: this device do not support Bluetooth.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (bluetoothAdapter.isEnabled()) { // Is turned ON.
                         // Do nothing.
@@ -227,7 +218,7 @@ public class Dashboard extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                common.write(Objects.requireNonNull(to_send.getText()).toString());
+                bt.write(Objects.requireNonNull(to_send.getText()).toString(), bluetoothSocket);
             }
         });
 
@@ -235,92 +226,29 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (bluetoothSocket == null) {
-                    // Check if bluetooth is available.
-                    if (bluetoothAdapter == null) {
-                        logFeedback("PROBLEMS: This device do not support Bluetooth.");
-                    } else {
-                        if (bluetoothAdapter.isEnabled()) { // Is turned ON.
-                            Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
+                    boolean connected = bt.connect(getApplicationContext(), bluetoothAdapter, bluetoothSocket);
 
-                            // Create a bluetooth device by its MAC adress.
-                            BluetoothDevice btDevice = bluetoothAdapter.getRemoteDevice(MODULE_ADRESS);
-                            logFeedback("Connecting to device: " + btDevice.getName());
-
-                            // Create the socket.
-                            try {
-                                bluetoothSocket = btDevice.createRfcommSocketToServiceRecord(mUUID);
-                                logFeedback("1/4. Socket creation done.");
-                            } catch (IOException e) {
-                                logFeedback("ERROR: socket creation failed.");
-                            }
-
-                            // Create the server socket.
-                            try {
-                                bluetoothServerSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BLG", mUUID);
-                                logFeedback("2/4. Server socket creation done.");
-                            } catch (IOException e) {
-                                logFeedback("ERROR: server socket creation failed.");
-                            }
-
-                            // Connect the socket.
-                            socketConnect();
-                            while (!bluetoothSocket.isConnected()) {
-                                counter_10 += 10;
-                                logFeedback("ERROR: socket connection failed. Intents: " + counter_10);
-                                socketConnect();
-                            }
-
-                            if (bluetoothSocket.isConnected()) {
-                                logFeedback("3/4. Socket connection established. Intent: " + counter + "/" + counter_10);
-
-                                // Bluetooth communication need.
-                                try {
-                                    inputStream = bluetoothSocket.getInputStream();
-                                    outputStream = bluetoothSocket.getOutputStream();
-                                    logFeedback("4/4. Streams created. The communication is available.");
-                                } catch (IOException e) {
-                                    logFeedback("ERROR: getting Streams.");
-                                }
-
-                                btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon));
-                                Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_SHORT).show();
-
-                                common.setBluetoothSocket(bluetoothSocket);
-                                common.setOutputStream(outputStream);
-                            }
-                        }
-                        else{ // Is turned OFF.
-                            // Ask user to activate bluetooth.
-                            Intent intent_BT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(intent_BT, 1);
-                        }
+                    if (connected) {
+                        Toast.makeText(getApplicationContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
+                        btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon));
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Not connected.", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else if (bluetoothSocket.isConnected()) {
-                    Toast.makeText(getApplicationContext(), "Disconnecting...", Toast.LENGTH_SHORT).show();
+                    boolean disconnected = bt.disconnect(getApplicationContext(), bluetoothSocket);
 
-                    try {
-                        bluetoothSocket.close();
-                        logFeedback("1/2. Socket closed.");
-
-                        btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon_off));
-                    } catch (IOException e) {
-                        logFeedback("ERROR: socket not closed.");
-                    }
-
-                    try {
-                        bluetoothServerSocket.close();
-                        logFeedback("2/2. Server socket closed. Bluetooth connection finished.");
+                    if (disconnected) {
                         Toast.makeText(getApplicationContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        logFeedback("ERROR: server socket not closed.");
+                        btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon_off));
                     }
-
-                    bluetoothSocket = null;
-                    bluetoothServerSocket = null;
+                    else {
+                        Toast.makeText(getApplicationContext(), "Not disconnected.", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    Toast.makeText(getBaseContext(), "PROBLEMS: on BT button click listener.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "BT problems...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -387,19 +315,6 @@ public class Dashboard extends AppCompatActivity {
         refreshPairedDevices();
     }
 
-    // Function to connect the socket with several attempts if applicable.
-    public void socketConnect() {
-        counter = 0;
-
-        do {
-            try {
-                bluetoothSocket.connect();
-            }
-            catch (IOException e) {}
-            counter++;
-        } while (!bluetoothSocket.isConnected() && counter < 10);
-    }
-
     // Function to refresh the paired devices.
     public void refreshPairedDevices() {
         refresh_counter += 1;
@@ -450,12 +365,16 @@ public class Dashboard extends AppCompatActivity {
     };
 
     // Append the feedback to its own tv and scrolls to end.
-    void logFeedback(String msg) {
+    public void logFeedback(String msg) {
+        // Check if there are log messages and add them to the feedback textview.
         if (common.getLog() != null) {
             feedback.append("-> Log: \n  " + common.getLog() + "\n");
             common.setLog("");
         }
+
         feedback.append(">> " + msg + "\n");
+
+        // Automatically scroll down the feedback textview.
         if (logLayout.getVisibility() == View.VISIBLE) {
             final int scrollAmount = feedback.getLayout().getLineTop(feedback.getLineCount()) - feedback.getHeight();
             if (scrollAmount > 0) {
