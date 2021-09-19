@@ -6,11 +6,9 @@
         <item>@drawable/out_sync</item>
         <item>@drawable/lateral</item>
         <item>@drawable/down</item>
-        <item>@drawable/lantern</item>
     </array>
     <array name="colors">
         <item>@android:color/holo_blue_light</item>
-        <item>@android:color/holo_green_dark</item>
         <item>@android:color/holo_red_light</item>
         <item>@android:color/holo_purple</item>
         <item>@android:color/holo_orange_light</item>

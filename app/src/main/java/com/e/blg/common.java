@@ -26,18 +26,25 @@ public class common {
             if (socket.isConnected()) {
                 try {
                     outputStream.write(input.getBytes());
-                    addLog(">> Sent: " + input + "\n");
+                    addLog("  >> Sent: " + input + "\n");
                 }
                 catch (IOException e) {
-                    addLog(">> ERROR: sending: " + input + "\n");
+                    addLog("  >> ERROR: sending: " + input + "\n");
                 }
             }
+            else {
+                addLog("  >> ERROR: sending: socket is not connected.\n");
+            }
+        }
+        else {
+            addLog("  >> ERROR: sending: socket is not defined.\n");
         }
     }
 
     // Log related functions.
     public static synchronized void addLog(String string){
-        common.log = common.log + string;
+        if (common.log == null) { common.log =  string; }
+        else { common.log = common.log + string; }
     }
 
     public static synchronized void setLog(String string){

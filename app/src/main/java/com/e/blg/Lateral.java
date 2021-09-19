@@ -40,14 +40,14 @@ public class Lateral extends AppCompatActivity {
 
     Button lateralData;
     TextView speedValue;
-    BubbleSeekBar nLeds, bright;
+    BubbleSeekBar ledsNum, bright;
     SpeedometerGauge speedometer;
     SeekArc circularProgressBar;
     WheelView wheelView;
 
-    int current_nLeds, last_nLeds;
-    int current_bright, last_bright;
-    float current_speed, last_speed;
+    int currLedsNum, lastLedsNum, itemsNum = 6;
+    int currBright, lastBright;
+    float currSpeed, lastSpeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +74,9 @@ public class Lateral extends AppCompatActivity {
         });
 
         // Number LEDs seekbar.
-        nLeds = findViewById(R.id.nLeds);
+        ledsNum = findViewById(R.id.ledsNum);
 
-        nLeds.getConfigBuilder()
+        ledsNum.getConfigBuilder()
                 .min(0)
                 .max(20)
                 .progress(4)
@@ -84,13 +84,13 @@ public class Lateral extends AppCompatActivity {
                 .sectionTextPosition(BubbleSeekBar.TextPosition.BELOW_SECTION_MARK)
                 .build();
 
-        nLeds.setOnTouchListener(new View.OnTouchListener() {
+        ledsNum.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                current_nLeds = nLeds.getProgress();
-                if (current_nLeds != last_nLeds) {
-                    common.write("13;" + current_nLeds + ";");
-                    last_nLeds = current_nLeds;
+                currLedsNum = ledsNum.getProgress();
+                if (currLedsNum != lastLedsNum) {
+                    common.write("13;" + currLedsNum + ";");
+                    lastLedsNum = currLedsNum;
                 }
                 return false;
             }
@@ -109,10 +109,10 @@ public class Lateral extends AppCompatActivity {
         bright.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                current_bright = bright.getProgress();
-                if (current_bright != last_bright) {
-                    common.write("11;" + current_bright + ";");
-                    last_bright = current_bright;
+                currBright = bright.getProgress();
+                if (currBright != lastBright) {
+                    common.write("11;" + currBright + ";");
+                    lastBright = currBright;
                 }
                 return false;
             }
@@ -129,7 +129,7 @@ public class Lateral extends AppCompatActivity {
         speedometer.addColoredRange(300, 500, Color.RED);
 
         // Text view.
-        speedValue = findViewById(R.id.speedValue);
+        speedValue = findViewById(R.id.speed_val);
 
         // Circular progress bar.
         circularProgressBar = findViewById(R.id.seekArc);
@@ -137,12 +137,12 @@ public class Lateral extends AppCompatActivity {
         circularProgressBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                current_speed = circularProgressBar.getProgress();
-                if (current_speed != last_speed) {
-                    common.write("11;" + current_speed*5 + ";");
-                    last_speed = current_speed;
-                    speedValue.setText(String.valueOf(current_speed*5));
-                    speedometer.setSpeed(current_speed*5);
+                currSpeed = circularProgressBar.getProgress();
+                if (currSpeed != lastSpeed) {
+                    common.write("11;" + currSpeed*5 + ";");
+                    lastSpeed = currSpeed;
+                    speedValue.setText(String.valueOf(currSpeed*5));
+                    speedometer.setSpeed(currSpeed*5);
                 }
                 return false;
             }

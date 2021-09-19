@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -34,6 +35,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,12 +43,11 @@ public class Dashboard extends AppCompatActivity {
 
     // GUI objects.
     RelativeLayout relativeLayout;
-    Button btBtn, iBtn, logBtn, refreshBtn, eraseBtn;
+    Button btBtn, iBtn, logBtn, refreshBtn, eraseBtn, sendBtn;
     LinearLayout logLayout;
-    TextView feedback;
+    TextView feedback, lastTv;
+    com.google.android.material.textfield.TextInputEditText to_send;
     ListView devicesList;
-
-    private ArrayAdapter devicesArray;
 
     // Animations.
     Animation logDownAnimation, logUpAnimation, transparentAnimation, refresh_rev, logBtnDownAnimation, logBtnUpAnimation;
@@ -54,7 +55,7 @@ public class Dashboard extends AppCompatActivity {
 
     // Bluetooth related.
     BluetoothAdapter bluetoothAdapter;
-    private static final String MODULE_ADRESS = "00:19:04:EE:A3:5C";
+    private static final String MODULE_ADRESS = "94:B9:7E:E4:AB:8A";
     static final UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothSocket bluetoothSocket = null;
     BluetoothServerSocket bluetoothServerSocket = null;
@@ -62,8 +63,9 @@ public class Dashboard extends AppCompatActivity {
     InputStream inputStream = null;
     OutputStream outputStream = null;
 
-    int counter;
-    int counter_10;
+    int counter; // Counter to check the attempts until being available to connect the socket.
+    int counter_10;  // Auxiliary counter to check the attempts until being available to connect the socket.
+    int refresh_counter; // Counter for the refresh function to know the first iteration to show special feedback.
 
     // Time control variables
     private long t_click_logBtn = 0;
@@ -82,9 +84,12 @@ public class Dashboard extends AppCompatActivity {
         refreshBtn = findViewById(R.id.refresh_button);
         eraseBtn = findViewById(R.id.erase_button);
         logBtn = findViewById(R.id.log_button);
+        sendBtn = findViewById(R.id.send_button);
 
         logLayout = findViewById(R.id.log_layout);
         feedback = findViewById(R.id.feedback);
+        feedback.setMovementMethod(new ScrollingMovementMethod());
+        to_send = findViewById(R.id.to_send);
         devicesList = findViewById(R.id.devices_list);
 
         // Animations
@@ -219,6 +224,13 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                common.write(Objects.requireNonNull(to_send.getText()).toString());
+            }
+        });
+
         btBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -231,12 +243,12 @@ public class Dashboard extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 
                             // Create a bluetooth device by its MAC adress.
-                            BluetoothDevice hc05 = bluetoothAdapter.getRemoteDevice(MODULE_ADRESS);
-                            logFeedback("Connecting to device: " + hc05.getName());
+                            BluetoothDevice btDevice = bluetoothAdapter.getRemoteDevice(MODULE_ADRESS);
+                            logFeedback("Connecting to device: " + btDevice.getName());
 
                             // Create the socket.
                             try {
-                                bluetoothSocket = hc05.createRfcommSocketToServiceRecord(mUUID);
+                                bluetoothSocket = btDevice.createRfcommSocketToServiceRecord(mUUID);
                                 logFeedback("1/4. Socket creation done.");
                             } catch (IOException e) {
                                 logFeedback("ERROR: socket creation failed.");
@@ -278,9 +290,9 @@ public class Dashboard extends AppCompatActivity {
                             }
                         }
                         else{ // Is turned OFF.
-                        // Ask user to activate bluetooth.
-                        Intent intent_BT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intent_BT, 1);
+                            // Ask user to activate bluetooth.
+                            Intent intent_BT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(intent_BT, 1);
                         }
                     }
                 }
@@ -371,6 +383,8 @@ public class Dashboard extends AppCompatActivity {
                 }
             }
         });
+
+        refreshPairedDevices();
     }
 
     // Function to connect the socket with several attempts if applicable.
@@ -388,8 +402,9 @@ public class Dashboard extends AppCompatActivity {
 
     // Function to refresh the paired devices.
     public void refreshPairedDevices() {
+        refresh_counter += 1;
         // Initialize Array adapter that requires a .xml file (new "Layout resource file" in the "layout" directory) with a single TextView.
-        devicesArray = new ArrayAdapter(Dashboard.this, R.layout.devices_tv);
+        ArrayAdapter devicesArray = new ArrayAdapter(Dashboard.this, R.layout.devices_tv);
 
         // Initialize listView.
         devicesList.setAdapter(devicesArray);
@@ -403,8 +418,13 @@ public class Dashboard extends AppCompatActivity {
         {
             for (BluetoothDevice device: pairedDevices) {
                 devicesArray.add(device.getName() + "\n" + device.getAddress());
+
+                // Get feedback about the desired device to pair by the automatic button.
+                if (device.getName().equals("BT420") && refresh_counter == 1) {
+                    Toast.makeText(getBaseContext(), "Alright, BT420 is available!", Toast.LENGTH_SHORT).show();
+                }
             }
-            logFeedback("Paired devices list refreshed.");
+            logFeedback("Paired devices refreshed.");
         }
     }
 
@@ -417,20 +437,33 @@ public class Dashboard extends AppCompatActivity {
     // List item click callback.
     final AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView av, View v, int arg2, long arg3) {
+            if (lastTv != null) {
+                lastTv = (TextView) v; // Update lastTv.
+                lastTv.setTypeface(null, Typeface.BOLD);
+            }
             // Get MAC adress from device (last 17 characters of the View).
             String info = ((TextView) v).getText().toString();
             String name = info.substring(0, info.length() - 17);
             logFeedback("Selected device: " + name);
+
         }
     };
 
     // Append the feedback to its own tv and scrolls to end.
-    private void logFeedback(String msg) {
+    void logFeedback(String msg) {
+        if (common.getLog() != null) {
+            feedback.append("-> Log: \n  " + common.getLog() + "\n");
+            common.setLog("");
+        }
         feedback.append(">> " + msg + "\n");
-        final int scrollAmount = feedback.getLayout().getLineTop(feedback.getLineCount()) - feedback.getHeight();
-        if (scrollAmount > 0)
-            feedback.scrollTo(0, scrollAmount);
-        else
-            feedback.scrollTo(0, 0);
+        if (logLayout.getVisibility() == View.VISIBLE) {
+            final int scrollAmount = feedback.getLayout().getLineTop(feedback.getLineCount()) - feedback.getHeight();
+            if (scrollAmount > 0) {
+                feedback.scrollTo(0, scrollAmount);
+            }
+            else {
+                feedback.scrollTo(0, 0);
+            }
+        }
     }
 }
