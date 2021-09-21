@@ -1,14 +1,7 @@
 package com.e.blg;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,27 +9,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cardiomood.android.controls.gauge.SpeedometerGauge;
-import com.cardiomood.android.controls.progress.CircularProgressBar;
-import com.google.android.material.color.MaterialColors;
 import com.lukedeighton.wheelview.WheelView;
-import com.lukedeighton.wheelview.adapter.WheelAdapter;
-import com.lukedeighton.wheelview.adapter.WheelArrayAdapter;
-import com.lukedeighton.wheelview.transformer.WheelItemTransformer;
 import com.triggertrap.seekarc.SeekArc;
 import com.xw.repo.BubbleSeekBar;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.regex.Pattern;
-
-public class Lateral extends AppCompatActivity {
+public class CustomStripe extends Dashboard { // I extended the class Dashboard to be able to access to MyBTclass object created there.
 
     Button lateralData;
     TextView speedValue;
@@ -52,7 +31,7 @@ public class Lateral extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lateral);
+        setContentView(R.layout.activity_custom_stripe);
 
         // Button
         lateralData = findViewById(R.id.bt_lateral);
@@ -167,7 +146,7 @@ public class Lateral extends AppCompatActivity {
     // Back button callback.
     public void onBackPressed(){
         super.onBackPressed();
-        Intent intent = new Intent(Lateral.this, Dashboard.class);
+        Intent intent = new Intent(CustomStripe.this, Dashboard.class);
         startActivity(intent);
         finish();
     }

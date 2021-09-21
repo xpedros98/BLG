@@ -5,16 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,15 +25,11 @@ import android.widget.Toast;
 
 import com.ramotion.circlemenu.CircleMenuView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -57,7 +48,7 @@ public class Dashboard extends AppCompatActivity {
     // Bluetooth related.
     public MyBTclass bt = new MyBTclass();
     BluetoothAdapter bluetoothAdapter;
-    BluetoothSocket bluetoothSocket = null;
+    boolean btConnected = false;
     Set<BluetoothDevice>  pairedDevices;
 
     int refresh_counter; // Counter for the refresh function to know the first iteration to show special feedback.
@@ -73,7 +64,7 @@ public class Dashboard extends AppCompatActivity {
 
         relativeLayout = findViewById(R.id.layout_Dashboard);
 
-        // Declarations
+        // GUI definitions.
         btBtn = findViewById(R.id.bt_button);
         iBtn = findViewById(R.id.i_button);
         refreshBtn = findViewById(R.id.refresh_button);
@@ -123,10 +114,10 @@ public class Dashboard extends AppCompatActivity {
                 // Check if bluetooth is available.
                 if (bluetoothAdapter == null) {
                     Toast.makeText(getBaseContext(), "PROBLEMS: this device do not support Bluetooth.", Toast.LENGTH_SHORT).show();
+                    logFeedback("ERROR: bluetoothAdapter is not available.");
                 } else {
                     if (bluetoothAdapter.isEnabled()) { // Is turned ON.
                         Toast.makeText(getBaseContext(), "Bluetooth is already turned ON.", Toast.LENGTH_SHORT).show();
-
                     } else { // Is turned OFF.
                         // Ask user to activate bluetooth.
                         Intent intent_BT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -144,59 +135,22 @@ public class Dashboard extends AppCompatActivity {
         circleMenuView.setEventListener(new CircleMenuView.EventListener() {
             @Override
             public void onButtonClickAnimationEnd(@NonNull CircleMenuView view, int buttonIndex) {
-                // Check if bluetooth is available.
-                if (bluetoothAdapter == null) {
-                    Toast.makeText(getBaseContext(), "PROBLEMS: this device do not support Bluetooth.", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (bluetoothAdapter.isEnabled()) { // Is turned ON.
-                        // Do nothing.
-                    } else { // Is turned OFF.
-                        // Ask user to activate bluetooth.
-                        Intent intent_BT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intent_BT, 1);
-                    }
-                }
-
                 // Check the circle menu option clicked.
                 switch (buttonIndex) {
                     case 0:
-                        Toast.makeText(getApplicationContext(), "Synced", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Add new stripe", Toast.LENGTH_SHORT).show();
 
                         // Open new activity and close the current one.
-                        Intent intent0 = new Intent(Dashboard.this, Sync.class);
+                        Intent intent0 = new Intent(Dashboard.this, AddStripe.class);
                         startActivity(intent0);
                         finish();
                         break;
                     case 1:
-                        Toast.makeText(getApplicationContext(), "Out of sync", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Custom your stripe", Toast.LENGTH_SHORT).show();
 
                         // Open new activity and close the current one.
-                        Intent intent1 = new Intent(Dashboard.this, Out_sync.class);
+                        Intent intent1 = new Intent(Dashboard.this, CustomStripe.class);
                         startActivity(intent1);
-                        finish();
-                        break;
-                    case 2:
-                        Toast.makeText(getApplicationContext(), "Lateral light", Toast.LENGTH_SHORT).show();
-
-                        // Open new activity and close the current one.
-                        Intent intent2 = new Intent(Dashboard.this, Lateral.class);
-                        startActivity(intent2);
-                        finish();
-                        break;
-                    case 3:
-                        Toast.makeText(getApplicationContext(), "Down light", Toast.LENGTH_SHORT).show();
-
-                        // Open new activity and close the current one.
-                        Intent intent3 = new Intent(Dashboard.this, Down.class);
-                        startActivity(intent3);
-                        finish();
-                        break;
-                    case 4:
-                        Toast.makeText(getApplicationContext(), "Focus lantern", Toast.LENGTH_SHORT).show();
-
-                        // Open new activity and close the current one.
-                        Intent intent4 = new Intent(Dashboard.this, Lantern.class);
-                        startActivity(intent4);
                         finish();
                         break;
                 }
@@ -218,37 +172,37 @@ public class Dashboard extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bt.write(Objects.requireNonNull(to_send.getText()).toString(), bluetoothSocket);
+                //Toast.makeText(getApplicationContext(), "Trying to send...", Toast.LENGTH_SHORT).show();
+                bt.write(Objects.requireNonNull(to_send.getText()).toString());
             }
         });
 
         btBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bluetoothSocket == null) {
-                    boolean connected = bt.connect(getApplicationContext(), bluetoothAdapter, bluetoothSocket);
+                if (!btConnected) {
+                    boolean connected = bt.connect(getApplicationContext(), bluetoothAdapter);
 
                     if (connected) {
-                        Toast.makeText(getApplicationContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
+                        btConnected = true;
+                        Toast.makeText(getApplicationContext(), "Connected.", Toast.LENGTH_SHORT).show();
                         btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon));
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Not connected.", Toast.LENGTH_SHORT).show();
                     }
                 }
-                else if (bluetoothSocket.isConnected()) {
-                    boolean disconnected = bt.disconnect(getApplicationContext(), bluetoothSocket);
+                else {
+                    boolean disconnected = bt.disconnect(getApplicationContext());
 
                     if (disconnected) {
+                        btConnected = false;
                         Toast.makeText(getApplicationContext(), "Disconnected.", Toast.LENGTH_SHORT).show();
                         btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon_off));
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Not disconnected.", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else {
-                    Toast.makeText(getBaseContext(), "BT problems...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -356,11 +310,23 @@ public class Dashboard extends AppCompatActivity {
                 lastTv = (TextView) v; // Update lastTv.
                 lastTv.setTypeface(null, Typeface.BOLD);
             }
-            // Get MAC adress from device (last 17 characters of the View).
+            // Get MAC adress from device (last 17 characters of the item from the listView).
             String info = ((TextView) v).getText().toString();
             String name = info.substring(0, info.length() - 17);
+            String MAC = info.substring(info.length() - 17);
             logFeedback("Selected device: " + name);
-
+            boolean connected = bt.newConnect(getApplicationContext(), bluetoothAdapter, MAC);
+            if (connected) {
+                btConnected = true;
+                Toast.makeText(getApplicationContext(), "BT connection successful.", Toast.LENGTH_SHORT).show();
+                logFeedback("New connection managed successfully.");
+                btBtn.setBackground(getResources().getDrawable(R.drawable.bluetooth_icon));
+            }
+            else {
+                btConnected = false;
+                Toast.makeText(getApplicationContext(), "ERROR: BT connection not successful.", Toast.LENGTH_SHORT).show();
+                logFeedback("ERROR: new connection not managed properly.");
+            }
         }
     };
 
@@ -368,7 +334,7 @@ public class Dashboard extends AppCompatActivity {
     public void logFeedback(String msg) {
         // Check if there are log messages and add them to the feedback textview.
         if (common.getLog() != null) {
-            feedback.append("-> Log: \n  " + common.getLog() + "\n");
+            feedback.append(">> Log:\n" + common.getLog() + "\n");
             common.setLog("");
         }
 

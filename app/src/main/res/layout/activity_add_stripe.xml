@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.percentlayout.widget.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddStripe"
+    android:background="@drawable/grad_add">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="20%"
+        android:text="Name:"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        tools:ignore="MissingClass" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="35%"
+        app:layout_heightPercent="7%"
+        app:layout_marginLeftPercent="20%"
+        app:layout_marginTopPercent="24%"
+        android:background="@color/green"
+        android:scrollbars="vertical"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:typeface="monospace"
+        android:inputType="textNoSuggestions" />
+
+    <TextView
+        android:id="@+id/num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_marginLeftPercent="65%"
+        app:layout_marginTopPercent="17%"
+        android:text="Num:"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <NumberPicker
+        android:id="@+id/number_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="10%"
+        app:layout_heightPercent="7%"
+        app:layout_marginLeftPercent="67%"
+        app:layout_marginTopPercent="23%"
+        android:background="@color/green"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="35%"
+        app:layout_heightPercent="18%"
+        app:layout_marginLeftPercent="33%"
+        app:layout_marginTopPercent="40%"
+        android:scaleX="0.75"
+        android:scaleY="0.75"
+        android:text=""
+        android:background="@drawable/add_icon"/>
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_heightPercent="5%"
+        app:layout_marginLeftPercent="5%"
+        app:layout_marginTopPercent="75%"
+        android:text="Stripes:"
+        android:textColor="@android:color/black"
+        android:textSize="23sp" />
+
+    <Button
+        android:id="@+id/clear_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="20%"
+        app:layout_heightPercent="12%"
+        app:layout_marginLeftPercent="75%"
+        app:layout_marginTopPercent="70%"
+        android:scaleX="0.75"
+        android:scaleY="0.75"
+        android:text=""
+        android:background="@drawable/erase_icon" />
+
+    <ListView
+        android:id="@+id/stripes_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_marginLeftPercent="5%"
+        app:layout_heightPercent="15%"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:layout_marginBottomPercent="2%" />
+
+</androidx.percentlayout.widget.PercentRelativeLayout>

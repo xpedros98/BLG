@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Lateral"
+    tools:context=".CustomStripe"
     android:background="@android:color/holo_red_light">
 
     <com.xw.repo.BubbleSeekBar
@@ -15,13 +15,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="111dp"
         app:bsb_auto_adjust_section_mark="true"
-        app:bsb_bubble_color="@color/yellow_led"
-        app:bsb_second_track_color="@color/yellow_led"
+        app:bsb_bubble_color="@color/yellow"
+        app:bsb_second_track_color="@color/yellow"
         app:bsb_section_text_size="10sp"
         app:bsb_show_section_mark="true"
         app:bsb_show_section_text="true"
         app:bsb_show_thumb_text="true"
-        app:bsb_thumb_text_color="@color/yellow_led"
+        app:bsb_thumb_text_color="@color/yellow"
         app:bsb_thumb_text_size="18sp"
         app:bsb_touch_to_seek="true"
         app:bsb_track_color="@color/greyark" />
@@ -110,7 +110,7 @@
         android:layout_height="166dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        app:emptyItemColor="@color/yellow_led"
+        app:emptyItemColor="@color/yellow"
         app:repeatItems="false"
         app:rotatableWheelDrawable="true"
         app:selectionAngle="45.0"

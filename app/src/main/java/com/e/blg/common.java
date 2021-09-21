@@ -5,8 +5,8 @@ public class common {
 
     // Log related functions.
     public static synchronized void addLog(String string){
-        if (common.log == null) { common.log =  string; }
-        else { common.log = common.log + "\n" + string; }
+        if (common.log == null) { common.log = " -> " + string; }
+        else { common.log = common.log + "\n -> " + string; }
     }
 
     public static synchronized void setLog(String string){

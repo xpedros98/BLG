@@ -14,7 +14,7 @@ import android.widget.ImageView;
 public class MainActivity extends AppCompatActivity {
 
     // Welcome activity duration time
-    private static int WELCOME_SCREEN = 3500; // [ms]
+    private static int WELCOME_SCREEN = 500; // [ms]
 
     // Welcome animations
     Animation cloud_1_animation, cloud_2_animation, cloud_3_animation, cloud_4_animation, cloud_5_animation, cloud_6_animation, cloud_7_animation, cloud_8_animation, cloud_9_animation, the_simpsons;

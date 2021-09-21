@@ -14,11 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".About"></activity>
-        <activity android:name=".Lantern" />
-        <activity android:name=".Down" />
-        <activity android:name=".Lateral" />
-        <activity android:name=".Out_sync" />
-        <activity android:name=".Sync" />
+        <activity android:name=".AddStripe" />
+        <activity android:name=".CustomStripe" />
         <activity android:name=".Dashboard" />
         <activity android:name=".MainActivity">
             <intent-filter>

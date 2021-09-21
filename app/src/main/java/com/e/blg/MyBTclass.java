@@ -15,17 +15,17 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MyBTclass {
-    private static final String MODULE_ADRESS = "94:B9:7E:E4:AB:8A";
     static final UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     static BluetoothServerSocket bluetoothServerSocket = null;
     static InputStream inputStream = null;
     static OutputStream outputStream = null;
-    static BluetoothSocket socket = null;
+    static BluetoothSocket bluetoothSocket = null;
     int counter; // Counter to check the attempts until being available to connect the socket.
     int counter_10;  // Auxiliary counter to check the attempts until being available to connect the socket.
+    String moduleAdress = "94:B9:7E:E4:AB:8A";
 
     // Class method to connect the smartphone with the device.
-    public boolean connect(Context context, BluetoothAdapter bluetoothAdapter, BluetoothSocket bluetoothSocket) {
+    public boolean connect(Context context, BluetoothAdapter bluetoothAdapter) {
         // RETURN LEGEND: -2 bluetoothAdapter is null ; -1 = bluetoothAdapter is OFF ; 0 = bluetoothSocket not connected ; 1 = bluetoothSocket properly connected.
         // Check if bluetooth is available.
         if (bluetoothAdapter == null) {
@@ -33,11 +33,11 @@ public class MyBTclass {
             return false;
         }
         else {
-            if (bluetoothAdapter.isEnabled()) { // BluetoothAdapter is ON.
+            if (bluetoothAdapter.isEnabled() && bluetoothSocket == null) { // BluetoothAdapter is ON.
                 Toast.makeText(context, "Connecting...", Toast.LENGTH_SHORT).show();
 
                 // Create a bluetooth device by its MAC adress.
-                BluetoothDevice btDevice = bluetoothAdapter.getRemoteDevice(MODULE_ADRESS);
+                BluetoothDevice btDevice = bluetoothAdapter.getRemoteDevice(moduleAdress);
                 common.addLog("Connecting to device: " + btDevice.getName());
 
                 // Create the socket.
@@ -59,13 +59,14 @@ public class MyBTclass {
                 // Connect the socket.
                 socketConnect(bluetoothSocket);
                 while (!bluetoothSocket.isConnected()) {
-                    counter_10 += 10;
-                    common.addLog("ERROR: socket connection failed. Intents: " + counter_10);
+                    common.addLog("ERROR: socket connection failed. Attempts: " + counter_10);
                     socketConnect(bluetoothSocket);
                 }
 
                 if (bluetoothSocket.isConnected()) {
-                    common.addLog("3/4. Socket connection established. Intent: " + counter + "/" + counter_10);
+                    String msg = "3/4. Socket connection established.";
+                    if (counter > 1) msg = msg + "Attempt: " + counter + "/" + counter_10;
+                    common.addLog(msg);
 
                     // Bluetooth communication need.
                     try {
@@ -90,7 +91,7 @@ public class MyBTclass {
         }
     }
 
-    public boolean disconnect(Context context, BluetoothSocket bluetoothSocket) {
+    public boolean disconnect(Context context) {
         Toast.makeText(context, "Disconnecting...", Toast.LENGTH_SHORT).show();
 
         try {
@@ -103,7 +104,7 @@ public class MyBTclass {
 
         try {
             bluetoothServerSocket.close();
-            common.addLog("2/2. Server socket closed. Bluetooth connection finished.");
+            common.addLog("2/2. Server socket closed. The communication is finished.");
         } catch (IOException e) {
             common.addLog("ERROR: server socket not closed.");
             return false;
@@ -115,9 +116,20 @@ public class MyBTclass {
         return true;
     }
 
+    public boolean newConnect(Context context, BluetoothAdapter btAdapter, String MAC) {
+        moduleAdress = MAC;
+        if (bluetoothSocket == null) return connect(context, btAdapter);
+        else {
+            boolean disconnected = disconnect(context);
+            if (disconnected) return connect(context, btAdapter);
+            else return false;
+        }
+    }
+
     // Function to connect the socket with several attempts if applicable.
     public void socketConnect(BluetoothSocket bluetoothSocket) {
         counter = 0;
+        counter_10 += 10;
         do {
             try {
                 bluetoothSocket.connect();
@@ -128,10 +140,9 @@ public class MyBTclass {
     }
 
     // Function to send data.
-    public void write(String input, BluetoothSocket socket)
-    {
-        if (socket != null) {
-            if (socket.isConnected()) {
+    public void write(String input) {
+        if (bluetoothSocket != null) {
+            if (bluetoothSocket.isConnected()) {
                 try {
                     outputStream.write(input.getBytes());
                     common.addLog("  >> Sent: " + input + "\n");

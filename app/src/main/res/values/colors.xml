@@ -4,10 +4,11 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="green_bt">#90ff40</color>
+    <color name="green">#AAE87E</color>
     <color name="greyark">#333333</color>
     <color name="blue_bt">#354CA0</color>
     <color name="blue_sky_1">#80DEEA</color>
     <color name="blue_sky_2">#29B6F6</color>
-    <color name="yellow_led">#EEEE22</color>
+    <color name="yellow">#FBFB84</color>
 
 </resources>

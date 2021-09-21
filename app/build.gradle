@@ -38,4 +38,6 @@ dependencies {
     implementation "com.github.Triggertrap:SeekArc:v1.1"
     // Wheel view
     implementation "com.github.lukedeighton:wheelview:0.4.2"
+    // Percent relative layout
+    implementation "androidx.percentlayout:percentlayout:1.0.0"
 }

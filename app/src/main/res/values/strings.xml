@@ -2,16 +2,12 @@
     <string name="app_name">Bose light gadget</string>
 
     <array name="icons">
-        <item>@drawable/sync</item>
-        <item>@drawable/out_sync</item>
-        <item>@drawable/lateral</item>
-        <item>@drawable/down</item>
+        <item>@drawable/add_icon</item>
+        <item>@drawable/color_palette_icon</item>
     </array>
     <array name="colors">
-        <item>@android:color/holo_blue_light</item>
-        <item>@android:color/holo_red_light</item>
-        <item>@android:color/holo_purple</item>
-        <item>@android:color/holo_orange_light</item>
+        <item>@color/yellow</item>
+        <item>@color/colorPrimaryDark</item>
     </array>
 
 </resources>
