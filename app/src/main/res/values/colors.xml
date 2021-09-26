@@ -5,10 +5,17 @@
     <color name="colorAccent">#D81B60</color>
     <color name="green_bt">#90ff40</color>
     <color name="green">#AAE87E</color>
+    <color name="green2">#0E4304</color>
+    <color name="strawberry">#B3234C</color>
+    <color name="orange">#FFA94D</color>
     <color name="greyark">#333333</color>
+    <color name="blue">#03081E</color>
+    <color name="blue2">#2A355E</color>
     <color name="blue_bt">#354CA0</color>
-    <color name="blue_sky_1">#80DEEA</color>
-    <color name="blue_sky_2">#29B6F6</color>
+    <color name="blue_sky">#80DEEA</color>
+    <color name="blue_sky2">#29B6F6</color>
     <color name="yellow">#FBFB84</color>
+    <color name="yellow2">#F0F000</color>
+    <color name="purple">#7F00FF</color>
 
 </resources>

@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/espiral_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".About"></activity>
-        <activity android:name=".AddStripe" />
+        <activity android:name=".About" />
+        <activity android:name=".AddStripe"
+                  android:windowSoftInputMode="adjustPan" /> <!--This property avoids the gui swipe up whem the keyboards pop-ups.-->
         <activity android:name=".CustomStripe" />
         <activity android:name=".Dashboard" />
         <activity android:name=".MainActivity">

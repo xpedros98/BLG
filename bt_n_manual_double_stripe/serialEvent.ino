@@ -1,4 +1,4 @@
-void serialEvent(){
+void serialEvent() {
   clearCommand();
   sIt = 0;
   while (Serial.available()){
@@ -9,7 +9,7 @@ void serialEvent(){
   analizeString();
 }
 
-void btEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param){
+void btEvent(esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
   if(event == ESP_SPP_SRV_OPEN_EVT){
     Serial.println("Client connected. ->");
   }
@@ -24,7 +24,7 @@ void clearCommand() {
   }
 }
 
-void analizeString(){
+void analizeString() {
   Serial.println(command);
   switch (command[0]) {
       case 'B': // Reference signal

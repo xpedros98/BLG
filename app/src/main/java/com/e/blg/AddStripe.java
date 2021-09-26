@@ -45,7 +45,7 @@ public class AddStripe extends Dashboard { // I extended the class Dashboard to 
         numberPicker.setMinValue(0);
         numberPicker.setMaxValue(100);
 
-        stripeName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        stripeName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         // Initialize Array adapter that requires a .xml file (new "Layout resource file" in the "layout" directory) with a single TextView.
         stripesArray = new ArrayAdapter(AddStripe.this, R.layout.stripes_tv);
@@ -57,15 +57,14 @@ public class AddStripe extends Dashboard { // I extended the class Dashboard to 
         SharedPreferences preferencias = getSharedPreferences(field_name, Context.MODE_PRIVATE);
         for (String string: preferencias.getString(field_name, "No stripes found").split(";")) stripesArray.add(string);
 
-        final Animation springAnimation = AnimationUtils.loadAnimation(this, R.anim.spring_animation);
+        final Animation save_springAnimation = AnimationUtils.loadAnimation(this, R.anim.spring_animation);
+        common.MyBounceInterpolator interpolator = new common.MyBounceInterpolator(0.2, 20);
+        save_springAnimation.setInterpolator(interpolator);
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Use bounce interpolator with amplitude 0.2 and frequency 20.
-                common.MyBounceInterpolator interpolator = new common.MyBounceInterpolator(0.2, 20);
-                springAnimation.setInterpolator(interpolator);
-                save.startAnimation(springAnimation);
+                save.startAnimation(save_springAnimation);
 
                 String newStripe = "Name: " + stripeName.getText() + " | Nº: " + numberPicker.getValue();
                 SharedPreferences preferencias = getSharedPreferences(field_name, Context.MODE_PRIVATE);

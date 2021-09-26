@@ -33,7 +33,6 @@
         app:layout_heightPercent="7%"
         app:layout_marginLeftPercent="20%"
         app:layout_marginTopPercent="24%"
-        android:background="@color/green"
         android:scrollbars="vertical"
         android:text=""
         android:textColor="@android:color/black"
@@ -59,7 +58,6 @@
         app:layout_heightPercent="7%"
         app:layout_marginLeftPercent="67%"
         app:layout_marginTopPercent="23%"
-        android:background="@color/green"
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:textColor="@android:color/black" />
@@ -93,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_widthPercent="20%"
-        app:layout_heightPercent="12%"
+        app:layout_heightPercent="11%"
         app:layout_marginLeftPercent="75%"
         app:layout_marginTopPercent="70%"
         android:scaleX="0.75"
@@ -109,6 +107,6 @@
         app:layout_heightPercent="15%"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        app:layout_marginBottomPercent="2%" />
+        app:layout_marginBottomPercent="6%" />
 
 </androidx.percentlayout.widget.PercentRelativeLayout>

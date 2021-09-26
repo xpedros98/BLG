@@ -40,4 +40,10 @@ dependencies {
     implementation "com.github.lukedeighton:wheelview:0.4.2"
     // Percent relative layout
     implementation "androidx.percentlayout:percentlayout:1.0.0"
+    // Color picker
+    implementation 'com.github.madrapps:pikolo:2.0.2'
+    // 1-d joystick
+    implementation 'co.aenterhy:toggleswitch:1.0.0'
+    // Jelly switch
+    implementation 'com.nightonke:jellytogglebutton:1.0.2'
 }
