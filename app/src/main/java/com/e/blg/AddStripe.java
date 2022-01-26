@@ -58,7 +58,7 @@ public class AddStripe extends Dashboard { // I extended the class Dashboard to 
         for (String string: preferencias.getString(field_name, "No stripes found").split(";")) stripesArray.add(string);
 
         final Animation save_springAnimation = AnimationUtils.loadAnimation(this, R.anim.spring_animation);
-        common.MyBounceInterpolator interpolator = new common.MyBounceInterpolator(0.2, 20);
+        common.MyBounceInterpolator interpolator = new common.MyBounceInterpolator(1, 5);
         save_springAnimation.setInterpolator(interpolator);
 
         save.setOnClickListener(new View.OnClickListener() {

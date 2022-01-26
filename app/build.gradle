@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdk 32
     defaultConfig {
         applicationId "com.e.blg"
         minSdkVersion 19
@@ -17,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion '32.0.0'
 }
 
 dependencies {
@@ -46,4 +46,6 @@ dependencies {
     implementation 'co.aenterhy:toggleswitch:1.0.0'
     // Jelly switch
     implementation 'com.nightonke:jellytogglebutton:1.0.2'
+    // Tools menu
+    implementation 'com.nightonke:boommenu:2.1.1'
 }

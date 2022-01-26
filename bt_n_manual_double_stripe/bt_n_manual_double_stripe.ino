@@ -3,11 +3,11 @@
 #include <BluetoothSerial.h>
 
 // Non robust/standard variables.
-int flag_pin = 21; // Switch (manual - BT) pin.
-int pb_pin = 5; // Push button pin.
-#define LED_PIN 18 // Leds stripe pin.
+int flag_pin = 22; // Switch (manual - BT) pin.
+int pb_pin = 16; // Push button pin.
+#define LED_PIN 5 // Leds stripe pin.
 #define NUM_LEDS 150 // Leds stripe length.
-#define LED_PIN_2 19 // Leds stripe pin.
+#define LED_PIN_2 18 // Leds stripe pin.
 #define NUM_LEDS_2 5 // Leds stripe length.
 
 // Variables related to the Serial/BT communication.

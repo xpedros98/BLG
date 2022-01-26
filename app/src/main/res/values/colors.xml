@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#033931</color>
     <color name="colorAccent">#D81B60</color>
     <color name="green_bt">#90ff40</color>
     <color name="green">#AAE87E</color>
@@ -15,7 +15,11 @@
     <color name="blue_sky">#80DEEA</color>
     <color name="blue_sky2">#29B6F6</color>
     <color name="yellow">#FBFB84</color>
-    <color name="yellow2">#F0F000</color>
+    <color name="color1">#A16C5C</color>
+    <color name="color1_dark">#403936</color>
+    <color name="color2">#9AA15C</color>
+    <color name="color2_dark">#454736</color>
     <color name="purple">#7F00FF</color>
+    <color name="transparent">#007F00FF</color>
 
 </resources>

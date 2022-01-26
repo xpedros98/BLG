@@ -2,6 +2,7 @@ package com.e.blg;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -24,8 +25,16 @@ import com.lukedeighton.wheelview.WheelView;
 import com.lukedeighton.wheelview.adapter.WheelAdapter;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Util;
+import com.nightonke.jellytogglebutton.JellyToggleButton;
+import com.nightonke.jellytogglebutton.State;
 import com.triggertrap.seekarc.SeekArc;
 import com.xw.repo.BubbleSeekBar;
+
+import java.util.Arrays;
 
 import co.aenterhy.toggleswitch.ToggleSwitchButton;
 
@@ -41,18 +50,34 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
     ImageView color_sample_1, color_sample_2, color_sample_3;
     HSLColorPicker colorPicker;
     ToggleSwitchButton joystick;
-    Animation turn_outAnimation, turn_inAnimation;
+    JellyToggleButton toggle;
+    BoomMenuButton leftMenu, rightMenu;
 
-    int currLedsNum, lastLedsNum, itemsNum = 6;
-    int currBright, lastBright;
-    float currSpeed, lastSpeed;
+    Animation add_inAnimation, add_outAnimation, turn_outAnimation, turn_inAnimation;
+
+    // Variables related to the color picker.
     int colorId = 1;
     int color1 = Color.parseColor("#000000");
     int color2 = Color.parseColor("#000000");
     int color3 = Color.parseColor("#000000");
-    String[] customGroup = {"color_picker", "color_sample1", "add2", "color_sample2", "add3", "color_sample3"};
+    String[] customGroup = {"color_picker", "color_sample1", "add2", "color_sample2", "add3", "color_sample3", "joystick"};
+    String[][] prohibited = {{"color_sample2", "add3", "color_sample3"}, {"add2", "color_sample3"}, {"add2", "add3"}};
 
-    private int[] items = {R.drawable.add_icon, R.drawable.double_flag, R.drawable.triple_flag, R.drawable.sol};
+    // Variables related to the data frame.
+    int palette = 0;
+    int brigth = 0;
+    int num = 0;
+    int rotation = 0;
+    int flag_num = 1;
+    float currSpeed = 0;
+    String RGB1 = "0_0_0";
+    String RGB2 = "0_0_0";
+    String RGB3 = "0_0_0";
+
+
+    private int[] items = {R.drawable.rand, R.drawable.rainbow, R.drawable.fire, R.drawable.water_wave, R.drawable.leaves, R.drawable.flamingo, R.drawable.police, R.drawable.color_ball, R.drawable.palm, R.drawable.sol};
+
+    Handler handler = new Handler();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -61,10 +86,14 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
         setContentView(R.layout.activity_custom_stripe);
 
         // Define the animations.
-        final Animation add_inAnimation = AnimationUtils.loadAnimation(this, R.anim.add_in);
-        final Animation add_outAnimation = AnimationUtils.loadAnimation(this, R.anim.add_out);
+        add_inAnimation = AnimationUtils.loadAnimation(this, R.anim.add_in);
+        add_outAnimation = AnimationUtils.loadAnimation(this, R.anim.add_out);
+        turn_outAnimation = AnimationUtils.loadAnimation(this, R.anim.turn_right_out);
+        turn_inAnimation = AnimationUtils.loadAnimation(this, R.anim.turn_left_in);
 
         customLayout = findViewById(R.id.layout_Custom);
+
+        // Color picker arcs.
         colorPicker = findViewById(R.id.color_picker);
 
         colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
@@ -111,6 +140,7 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
             @Override
             public boolean onLongClick(View v) {
                 if (add3.getVisibility() == View.VISIBLE) {
+                    flag_num = 1;
                     add3.startAnimation(add_outAnimation);
                     add3.setVisibility(View.INVISIBLE);
                     color_sample_2.startAnimation(add_outAnimation);
@@ -138,6 +168,7 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
         color_sample_3.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                flag_num = 2;
                 color_sample_3.startAnimation(add_outAnimation);
                 color_sample_3.setVisibility(View.INVISIBLE);
                 add3.startAnimation(add_inAnimation);
@@ -156,6 +187,7 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
         add2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                flag_num = 2;
                 colorId = 2;
                 add2.startAnimation(add_outAnimation);
                 add2.setVisibility(View.INVISIBLE);
@@ -170,6 +202,7 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
         add3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                flag_num = 3;
                 colorId = 3;
                 add3.startAnimation(add_outAnimation);
                 add3.setVisibility(View.INVISIBLE);
@@ -192,10 +225,6 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
         ledsNum.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                currLedsNum = ledsNum.getProgress();
-                if (currLedsNum != lastLedsNum) {
-                    lastLedsNum = currLedsNum;
-                }
                 return false;
             }
         });
@@ -238,6 +267,29 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
             }
         });
 
+        // Default-customizable modes switch.
+        toggle = findViewById(R.id.toggle);
+
+        // Set the layout according the initial default configuration (left).
+        setGroupVisibility(customGroup, View.INVISIBLE);
+        toggle.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
+            @Override
+            public void onStateChange(float process, State state, JellyToggleButton jtb) {
+                if (state == State.RIGHT_TO_LEFT) { // Default
+                    setGroupAnimation(customGroup, add_outAnimation);
+                    setGroupVisibility(customGroup, View.INVISIBLE);
+                    wheelView.startAnimation(add_inAnimation);
+                    wheelView.setVisibility(View.VISIBLE);
+                }
+                else if (state == State.LEFT_TO_RIGHT) { // Custom
+                    wheelView.startAnimation(add_outAnimation);
+                    wheelView.setVisibility(View.INVISIBLE);
+                    setGroupAnimation(customGroup, add_inAnimation);
+                    setGroupVisibility(customGroup, View.VISIBLE);
+                }
+            }
+        });
+
         // Circular speed view.
         speedometer = findViewById(R.id.speedometer);
         speedometer = findViewById(R.id.speedometer);
@@ -258,11 +310,8 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 currSpeed = circularProgressBar.getProgress();
-                if (currSpeed != lastSpeed) {
-                    lastSpeed = currSpeed;
-                    speedValue.setText(String.valueOf(currSpeed*5) + " Hz");
-                    speedometer.setSpeed(currSpeed*5);
-                }
+                speedValue.setText(String.valueOf(currSpeed*5) + " Hz");
+                speedometer.setSpeed(currSpeed*5);
                 return false;
             }
         });
@@ -299,9 +348,6 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
         });
 
         // Define the switch between custom colors and default palettes.
-        turn_outAnimation = AnimationUtils.loadAnimation(this, R.anim.turn_right_out);
-        turn_inAnimation = AnimationUtils.loadAnimation(this, R.anim.turn_left_in);
-
         joystick = findViewById(R.id.joystick);
         joystick.setOnTriggerListener(new ToggleSwitchButton.OnTriggerListener() {
             @Override
@@ -314,6 +360,24 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
 
             }
         });
+
+        // Left splash menu.
+        leftMenu = findViewById(R.id.left_menu);
+
+        leftMenu.setButtonEnum(ButtonEnum.SimpleCircle);
+
+        for (int i = 0; i < leftMenu.getButtonPlaceEnum().buttonNumber(); i++) {
+            leftMenu.addBuilder(new SimpleCircleButton.Builder().normalImageRes(R.drawable.add_icon));
+        }
+
+        // Right splash menu.
+        rightMenu = findViewById(R.id.right_menu);
+
+        rightMenu.setButtonEnum(ButtonEnum.SimpleCircle);
+
+        for (int i = 0; i < rightMenu.getButtonPlaceEnum().buttonNumber(); i++) {
+            rightMenu.addBuilder(new SimpleCircleButton.Builder().normalImageRes(R.drawable.add_icon));
+        }
     }
 
     // Back button callback.
@@ -379,7 +443,18 @@ public class CustomStripe extends Dashboard { // I extended the class Dashboard 
     private void setGroupAnimation(String[] group, Animation animation) {
         for (String id: group) {
             int Id = getResources().getIdentifier(id, "id", this.getPackageName());
-            findViewById(Id).startAnimation(animation);
+            if (!(group == customGroup & Arrays.asList(prohibited[flag_num - 1]).contains(id))) {
+                findViewById(Id).startAnimation(animation);
+            }
+        }
+    }
+
+    private void setGroupVisibility(String[] group, int visibility) {
+        for (String id: group) {
+            int Id = getResources().getIdentifier(id, "id", this.getPackageName());
+            if (!(group == customGroup & Arrays.asList(prohibited[flag_num - 1]).contains(id))) {
+                findViewById(Id).setVisibility(visibility);
+            }
         }
     }
 }

@@ -26,55 +26,62 @@ void clearCommand() {
 
 void analizeString() {
   Serial.println(command);
-  switch (command[0]) {
-      case 'B': // Reference signal
-                brght = atoi(&command[1]);
-                brght = check(brght, 10, 100);
-        break;
-      case 'F': // Reference signal
-                freq = atoi(&command[1]);
-                freq = check(freq, 10, 10000);
-        break;
-      case 'N': // Reference signal
-                num = atoi(&command[1]);
-                num = check(num, 1, NUM_LEDS);
-
-        break;
-      case 'P': // Reference signal
-                // Find the first delimited word.
-                token = strtok(command, delimiter);
-                
-                tokens_counter = 0;
-                // Find the following delimited words.
-                while(token != NULL) {
-                  Serial.println(token);
-                  tokens_counter += 1;
-                  token = strtok(NULL, delimiter);
-                  
-                //   if (counter == 1) {
-                //     palette = token.toInt();
-                //     palette = check(palette, 0, 10); // The length of the palettes array should be checkd here.
-                //   }
-                //   else if (counter == 2) {
-                //     R = token.toInt();
-                //     R = check(R, 0, 255);
-                //   }
-                //   else if (counter == 3) {
-                //     G = token.toInt();
-                //     G = check(G, 0, 255);
-                //   }
-                //   else if (counter == 4) {
-                //     B = token.toInt();
-                //     B = check(B, 0, 255);
-                //   }
-                }
-        break;
-      default:
-                Serial.print("ERROR: Command: '");
-                Serial.print(command);
-                Serial.println("' is not valid."); 
-        break;
+  
+  // Find the first delimited word.
+  token = strtok(command, delimiter);
+  tokens_counter = 0;
+  // Find the following delimited words.
+  while(token != NULL) {
+    Serial.print("Token ");
+    Serial.print(tokens_counter);
+    Serial.print(": ");
+    Serial.println(token);
+    tokens_counter += 1;
+    token = strtok(NULL, delimiter);
+    if (token != NULL) {
+      switch (token[0]) {
+          case 'B': // Reference signal
+                    brght = atoi(&command[1]);
+                    brght = check(brght, 10, 100);
+            break;
+          case 'F': // Reference signal
+                    freq = atoi(&command[1]);
+                    freq = check(freq, 10, 10000);
+            break;
+          case 'N': // Reference signal
+                    num = atoi(&command[1]);
+                    num = check(num, 1, NUM_LEDS);
+  
+            break;
+          case 'P': // Reference signal
+            break;
+          default:
+                  Serial.print("ERROR: Command: '");
+                  Serial.print(command);
+                  Serial.println("' is not valid.");
+            break;
+      }
+    }
   }
+//    if (token.compare("B")) {
+//      brght = atoi(&command[1]);
+//      brght = check(brght, 10, 100);
+//    }
+//    else if (token.compare("F")) {
+//      freq = atoi(&command[1]);
+//      freq = check(freq, 10, 10000);
+//    }
+//    else if (token.compare("N")) {
+//      num = atoi(&command[1]);
+//      num = check(num, 1, NUM_LEDS);
+//    }
+//    else {
+//      Serial.print("ERROR: Command: '");
+//      Serial.print(command);
+//      Serial.println("' is not valid."); 
+//    }
+
+  // Final set feedback.
   Serial.print("Num: ");
   Serial.println(num);
   Serial.print("Brght: ");

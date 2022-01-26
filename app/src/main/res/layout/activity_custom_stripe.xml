@@ -33,7 +33,7 @@
         app:layout_widthPercent="85%"
         app:layout_heightPercent="20%"
         android:layout_centerHorizontal="true"
-        app:layout_marginTopPercent="25%"
+        app:layout_marginTopPercent="20%"
         app:bsb_auto_adjust_section_mark="true"
         app:bsb_bubble_color="@color/yellow"
         app:bsb_second_track_color="@color/yellow"
@@ -121,12 +121,33 @@
         app:emptyItemColor="@color/yellow"
         app:repeatItems="true"
         app:selectionAngle="90.0"
-        app:wheelDrawable="@drawable/vinyl"
-        app:wheelItemRadius="40dp"
-        app:wheelRadius="150dp"
-        android:visibility="invisible" />
+        app:wheelDrawable="@drawable/vinyl_pharcyde"
+        app:wheelItemRadius="25dp"
+        app:wheelToItemDistance="125dp"
+        app:wheelRadius="150dp" />
     <!--        app:rotatableWheelDrawable="true"-->
     <!--        app:wheelDrawable="@drawable/vinyl"-->
+
+    <!--Padding here is used to see the animation properly-->
+    <com.nightonke.jellytogglebutton.JellyToggleButton
+        android:id="@+id/toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_marginTopPercent="75%"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        app:jtbJelly="active_tremble_body_slim_jim"
+        app:jtbLeftTextTypeface="fonts/Lato-Light.ttf"
+        app:jtbRightTextTypeface="fonts/Lato-Light.ttf"
+        app:jtbLeftTextColor="@color/color1"
+        app:jtbRightTextColor="@color/color2"
+        app:jtbLeftText="Default"
+        app:jtbRightText="Custom"
+        app:jtbLeftTextSize="15dp"
+        app:jtbRightTextSize="15dp"
+        app:jtbBackgroundRadius="0dp"
+        app:jtbLeftThumbColor="@color/color1_dark"
+        app:jtbRightThumbColor="@color/color2_dark" />
 
     <co.aenterhy.toggleswitch.ToggleSwitchButton
         android:id="@+id/joystick"
@@ -143,26 +164,29 @@
         app:upper="@drawable/simple_plus"
         app:bottom="@drawable/simple_minus" />
 
-    <!--Padding here is used to see the animation properly-->
-    <com.nightonke.jellytogglebutton.JellyToggleButton
-        android:id="@+id/jtb_03"
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/left_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_marginTopPercent="75%"
-        android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        app:jtbJelly="active_tremble_body_slim_jim"
-        app:jtbLeftTextTypeface="fonts/Lato-Light.ttf"
-        app:jtbRightTextTypeface="fonts/Lato-Light.ttf"
-        app:jtbLeftTextColor="@color/yellow2"
-        app:jtbRightTextColor="@color/purple"
-        app:jtbLeftText="Default"
-        app:jtbRightText="Custom"
-        app:jtbLeftTextSize="15dp"
-        app:jtbRightTextSize="15dp"
-        app:jtbBackgroundRadius="0dp"
-        app:jtbLeftThumbColor="@color/purple"
-        app:jtbRightThumbColor="@color/yellow2" />
+        app:layout_marginLeftPercent="5%"
+        app:bmb_normalColor="@color/transparent"
+        app:bmb_buttonEnum="textInsideCircle"
+        app:bmb_piecePlaceEnum="piecePlace_dot_3_1"
+        app:bmb_buttonPlaceAlignmentEnum="buttonPlaceAlignment_bottom"
+        app:bmb_buttonPlaceEnum="buttonPlace_sc_3_1" />
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/right_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_marginTopPercent="75%"
+        app:layout_marginLeftPercent="75%"
+        app:bmb_normalColor="@color/transparent"
+        app:bmb_buttonEnum="textInsideCircle"
+        app:bmb_piecePlaceEnum="piecePlace_dot_3_1"
+        app:bmb_buttonPlaceAlignmentEnum="buttonPlaceAlignment_bottom"
+        app:bmb_buttonPlaceEnum="buttonPlace_sc_3_1" />
 
     <!--Speedometer "group" (last)-->
     <com.cardiomood.android.controls.gauge.SpeedometerGauge

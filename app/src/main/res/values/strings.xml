@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bose light gadget</string>
+    <string name="app_name">Bose Light Gadget</string>
 
     <array name="icons">
         <item>@drawable/add_icon</item>
